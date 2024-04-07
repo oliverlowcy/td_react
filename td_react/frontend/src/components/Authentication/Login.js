@@ -6,6 +6,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
+import  { Redirect } from 'react-router-dom'
 
 const Login = () => {
   const [show, setShow] = useState(false);
@@ -51,7 +52,8 @@ const Login = () => {
       });
       localStorage.setItem("userInfo", JSON.stringify(data));
       
-      history.push("/chats")
+      history.push("/chats");
+      history.go(0);
     } catch (error) {
       console.log("Error",error)
       toast({

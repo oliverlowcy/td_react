@@ -16,6 +16,7 @@ import {
   ModalCloseButton,Center
 } from '@chakra-ui/react'
 import { useDisclosure } from '@chakra-ui/react'
+import { Redirect } from "react-router-dom";
 
 
 const Signup = () => {
@@ -111,7 +112,8 @@ const Signup = () => {
       );  
       localStorage.setItem("userInfo", JSON.stringify(data));
       onClose()
-      history.push('/chats')
+      history.push("/chats");
+      history.go(0);
     }catch(error){
       toast({
         title: "Error Occured!",
