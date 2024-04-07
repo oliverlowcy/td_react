@@ -24,15 +24,14 @@ const Signup = () => {
   const toast = useToast()
   const history = useHistory();
 
-  const [email, setEmail] = useState();
-  const [confirmpassword, setConfirmpassword] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [confirmpassword, setConfirmpassword] = useState("");
+  const [password, setPassword] = useState("");
   const [otp, setOTP] = useState();
   const { isOpen, onOpen, onClose } = useDisclosure()
   
 
   const createOTPHandler = async () => {
-    onOpen()
     if (!email || !password || !confirmpassword) {
       toast({
         title: "Please Fill all the Feilds",
@@ -77,6 +76,7 @@ const Signup = () => {
         isClosable: true,
         position: "bottom",
       });
+      onOpen()
 
 
     } catch (error) {
@@ -132,6 +132,7 @@ const Signup = () => {
           type="email"
           placeholder="Enter Your Email Address"
           onChange={(e) => setEmail(e.target.value)}
+          value = {email}
         />
       </FormControl>
       <FormControl id="password" isRequired>
@@ -141,6 +142,7 @@ const Signup = () => {
             type={show ? "text" : "password"}
             placeholder="Enter Password"
             onChange={(e) => setPassword(e.target.value)}
+            value = {password}
           />
           <InputRightElement width="4.5rem">
             <Button h="1.75rem" size="sm" onClick={handleClick}>
@@ -156,6 +158,7 @@ const Signup = () => {
             type={show ? "text" : "password"}
             placeholder="Confirm password"
             onChange={(e) => setConfirmpassword(e.target.value)}
+            value = {confirmpassword}
           />
           <InputRightElement width="4.5rem">
             <Button h="1.75rem" size="sm" onClick={handleClick}>
