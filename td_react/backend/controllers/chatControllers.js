@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Chat = require("../models/chatModel");
 const User = require("../models/userModel");
+const Profile = require("../models/profileModel");
 
 const accessChat = asyncHandler(async (req, res) => {
   const { userId } = req.body;
@@ -51,17 +52,36 @@ const accessChat = asyncHandler(async (req, res) => {
 //@access          Protected
 const fetchChats = asyncHandler(async (req, res) => {
   try {
-    Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
+    var results = await Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
       .populate("users", "-password")
       .populate("latestMessage")
       .sort({ updatedAt: -1 })
-      .then(async (results) => {
-        results = await User.populate(results, {
-          path: "latestMessage.sender",
-          select: "name email",
-        });
-        res.status(200).send(results);
-      });
+      
+    results = await Chat.populate(results, {
+      path: "latestMessage.sender",
+      select: "name email",
+    });
+
+    const plainResults = results.map(result => result.toObject());
+    for (const result of plainResults) {
+      let profile;
+     
+      if (result.users[0]._id.equals(req.user._id)) {
+        profile = await Profile.find({ user: result.users[1]._id });
+        
+      } else {
+        profile = await Profile.find({ user: result.users[0]._id });
+        
+      }
+      
+      result.oppProfile = profile[0];
+      
+    };
+    res.status(200).send(plainResults);
+
+
+
+    
   } catch (error) {
     res.status(400);
     throw new Error(error.message);

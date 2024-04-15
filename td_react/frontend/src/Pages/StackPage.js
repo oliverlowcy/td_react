@@ -3,7 +3,7 @@ import { ChatState } from '../Context/ChatProvider'
 import axios from "axios"
 import { useToast } from "@chakra-ui/toast";
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
-import { Heading, Text, Divider, Button, ButtonGroup,Stack} from "@chakra-ui/react";
+import { Heading, Text, Divider, Button, ButtonGroup,Stack,Image} from "@chakra-ui/react";
 
 const StackPage = () => {
     const [loading,setLoading] = useState(true);
@@ -39,21 +39,50 @@ const StackPage = () => {
             }
             
         }catch(e){
-            toast({
-                title: "Error Occured!",
-                description: "Failed to Load new stack profile",
-                status: "error",
-                duration: 5000,
-                isClosable: true,
-                position: "bottom-left",
-            });
+            
+            setLoading(false);
+            setStackProfile()
         }
 
     };
   
-    const handleSkip = async()=>{
+    const handleLike = async(profile)=>{
+        const config = {
+            headers: {
+              "Content-type": "application/json",
+              Authorization: `Bearer ${user.token}`,
+            },
+        };
+        const { data } = await axios.post(`http://localhost:5000/api/profile/like`,{userId:profile.user},config);
+        if(data.match){
+            const config2 = {
+                headers: {
+                "Content-type": "application/json",
+                Authorization: `Bearer ${user.token}`,
+                },
+            };
+            const { data2 } = await axios.post(`http://localhost:5000/api/chat/`,{userId:profile.user},config);
+            console.log(data2)
+        }
+
         setSkipIndicator(!skipIndicator)
     }
+
+    const handleUnlike = async(profile)=>{
+        console.log(user)
+        const config = {
+            headers: {
+              "Content-type": "application/json",
+              Authorization: `Bearer ${user.token}`,
+            },
+        };
+
+        const { data } = await axios.post(`http://localhost:5000/api/profile/unlike`,{userId:profile.user},config);
+
+
+        setSkipIndicator(!skipIndicator)
+    }
+
 
     return (
 
@@ -63,29 +92,53 @@ const StackPage = () => {
             {loading ? (<>
                 
             </>):(<>
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <Card maxW='sm'>
-        <CardBody>
-          <Stack mt='6' spacing='3'>
-            <Heading size='md'>Living room Sofa</Heading>
-            <Text>
-              {stackProfile && stackProfile.name}
-            </Text>
-          </Stack>
-        </CardBody>
-        <Divider />
-        <CardFooter>
-          <ButtonGroup spacing='2'>
-            <Button variant='solid' colorScheme='blue' onClick={handleSkip}>
-              Next
-            </Button>
-            <Button variant='ghost' colorScheme='blue'>
-              Add to cart
-            </Button>
-          </ButtonGroup>
-        </CardFooter>
-      </Card>
-    </div>
+                {stackProfile ? (<>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                    <Card maxW='sm'>
+                        <CardBody>
+                        <Stack mt='6' spacing='3'>
+                            <Heading size='md'>Living room Sofa</Heading>
+                            <Text>
+                            {stackProfile && stackProfile.name}
+                            </Text>
+                        </Stack>
+                        </CardBody>
+                        <Divider />
+                        <CardFooter>
+                        <ButtonGroup spacing='2'>
+                            <Button variant='solid' colorScheme='blue' onClick={()=>handleLike(stackProfile)}>
+                            Like
+                            </Button>
+                            <Button variant='ghost' colorScheme='blue' onClick={()=>handleUnlike(stackProfile)}>
+                            Unlike
+                            </Button>
+                        </ButtonGroup>
+                        </CardFooter>
+                    </Card>
+                </div>
+</>):(<>
+<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', textAlign: 'center'}}>
+                    <Card maxW='sm'>
+  <CardBody>
+    <Image
+      src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
+      alt='Green double couch with wooden legs'
+      borderRadius='lg'
+    />
+    <Stack mt='6' spacing='3'>
+      <Heading size='md'>Ooops... Dead end</Heading>
+      <Text>
+        Please try again later
+      </Text>
+      
+    </Stack>
+  </CardBody>
+  <Divider />
+
+</Card>
+                </div>
+    
+</>)}
             </>)}
 
         </div>
@@ -93,3 +146,4 @@ const StackPage = () => {
 }
 
 export default StackPage
+

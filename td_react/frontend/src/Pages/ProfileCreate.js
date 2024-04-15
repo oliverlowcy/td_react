@@ -18,12 +18,18 @@ const ProfileCreate = () => {
     const [bio,setBio]=useState("")
     const [hobbies,setHobbies]=useState([])
     const [majors,setMajors]=useState([])
+    const [picLoading,setPicLoading]=useState(false)
     const [pic,setPic]=useState([])
     const toast = useToast()
-    const {user} = ChatState()
+    const {user,profile} = ChatState()
     const history = useHistory()
 
-
+    useEffect(()=>{
+      const profile = JSON.parse(localStorage.getItem("profile"));
+      if(profile){
+        history.push("/chats")
+      }
+    },[])
 
 
 
@@ -129,6 +135,7 @@ Major.forEach((major, index) => {
 
 
   const postDetails = (e) => {
+    setPicLoading(true)
     console.log(e)
     const pics = Array.from(e.target.files)
     if (pics === undefined) {
@@ -173,6 +180,7 @@ Major.forEach((major, index) => {
             return;
             }
         setPic(tempArr)
+        setPicLoading(false)
     }
     
   };
@@ -187,9 +195,8 @@ Major.forEach((major, index) => {
         isClosable: true,
         position: "bottom",
       });
-      return
     }
-
+    
     try{ 
       const hobbieVals = hobbies.map(item => item.value);
       const majorVals = majors.map(item => item.value);
@@ -259,7 +266,7 @@ Major.forEach((major, index) => {
                 onChange={(e) => postDetails(e)}
                 />
             </FormControl>
-            <button onClick = {submit}>Submit</button>
+            <button onClick = {submit} isloading = {picLoading}>Submit</button>
         </Container>
         
         

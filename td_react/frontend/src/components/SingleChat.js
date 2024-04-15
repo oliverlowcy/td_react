@@ -185,7 +185,7 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
             />
             
             <>
-              {getSender(user, selectedChat.users)}
+              {selectedChat.oppProfile.name}
             </>
               
           </Text>

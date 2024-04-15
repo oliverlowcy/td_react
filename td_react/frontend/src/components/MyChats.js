@@ -96,7 +96,7 @@ const MyChats = ({ fetchAgain }) => {
                 key={chat._id}
               >
                 <Text>
-                  {getSender(loggedUser, chat.users)}
+                  {(chat.oppProfile.name)}
                 </Text>
               </Box>
             ))}

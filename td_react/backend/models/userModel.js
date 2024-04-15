@@ -5,7 +5,10 @@ const userSchema = mongoose.Schema(
   {
     name: { type: "String", required: true },
     email: { type: "String", unique: true, required: true },
-    password: { type: "String", required: true },
+    password: { type: "String", required: true }, 
+    like: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    unlike: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    matches: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }
 );
