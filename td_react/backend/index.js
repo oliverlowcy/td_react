@@ -14,6 +14,7 @@ app.use(express.json())
 const userRoutes = require('./routes/userRoutes');
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
+const profileRoutes = require("./routes/profileRoutes");
 
 
 const { notFound,errorHandler } = require("./middleware/errorMiddleware");
@@ -25,6 +26,7 @@ const port = process.env.PORT || 5000;
 app.use('/api/user',userRoutes)
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
+app.use("/api/profile", profileRoutes);
 
 //===================================================
 const path = require('path');

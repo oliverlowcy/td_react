@@ -112,8 +112,7 @@ const Signup = () => {
       );  
       localStorage.setItem("userInfo", JSON.stringify(data));
       onClose()
-      history.push("/chats");
-      history.go(0);
+      history.push("/profileCreate");
     }catch(error){
       toast({
         title: "Error Occured!",

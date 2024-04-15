@@ -16,6 +16,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory()
+  
 
   const submitHandler = async () => {
     if (!email || !password) {
@@ -51,14 +52,35 @@ const Login = () => {
         position: "bottom",
       });
       localStorage.setItem("userInfo", JSON.stringify(data));
+      // console.log("XXXXXXXXXX",JSON.parse(localStorage.getItem("userInfo")).token)
+      // history.push("/profileCreate");
+      // history.go(0)
+      console.log("XXXXXXXXXX",JSON.parse(localStorage.getItem("userInfo")).token)
+
+      const config2 = {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("userInfo")).token}`,  
+        },
+      };
+      //COMMENTX the signature FOR POST is api,JSON DATA,config
+      const profile = await axios.get("http://localhost:5000/api/profile",config2);
+      if(profile.data.length > 0){
+        localStorage.setItem("profile", JSON.stringify(profile.data[0]));
+        history.push("/chats");
+        history.go(0)
+      }else{
+        history.push("/profileCreate");
+        history.go(0)
+      }
+
       
-      history.push("/chats");
-      history.go(0);
+      
+      
     } catch (error) {
       console.log("Error",error)
       toast({
         title: "Error Occured!",
-        description: error.response.data.message,
+        description: "NULL",
         status: "error",
         duration: 5000,
         isClosable: true,
